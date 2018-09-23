@@ -84,12 +84,10 @@ int main() {
 
 		char cmd = toupper(getchar());
 		switch (cmd) {
-			case 'P':
-				spawnPlatform(&platform);
-				break;
-			case 'W':
-				playerJump(&player);
-				break;
+			case ' ':
+				case UP:
+					playerJump(&player);
+					break;
 			case 'Q':
 				endwin();
 				exit(0);
@@ -125,7 +123,8 @@ void PlayerInit(Player *player) {
 }
 
 void playerJump(Player *player) {
-	player->yVelocity = -6;
+	if(player->yVelocity == 0)
+		player->yVelocity = -6;
 }
 
 void drawPlayer(Player *player) {
