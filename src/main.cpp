@@ -15,9 +15,9 @@
 #define UP 119
 #define LEFT 97
 #define RIGHT 100
-#define GRAVITY 3
+#define GRAVITY 1
 
-int score = -1;
+int score = 0;
 
 typedef struct Player {
 	int x, y; // Posição na tela
@@ -37,7 +37,8 @@ typedef struct Platform {
 int kbhit(void);
 
 //Game
-void GameInit(Player *player, Platform *latform);
+void GameInit(Player *player, Platform *platform);
+int gameOver(Player *player, Platform *platform);
 //Platform
 void PlatformInit(Platform *platform);
 void spawnPlatform(Platform *platform);
@@ -69,25 +70,34 @@ int main() {
 		while (!kbhit()) {
 			erasePlayer(&player);
 			movePlayer(&player);
-			drawPlayer(&player);
+			if (gameOver(&player, &platform) == 1) {
+				refresh();
+				sleep(2);
+				endwin();
+				exit(0);
+			}
 			if (finishedConstruction(&platform))
 				spawnPlatform(&platform);
 			drawHeadPlatform(&platform);
-			movePlatformHead(&platform);
-			setBorders();
+			setBorders();	
 			usleep(player.MAX_SPEED);
 			refresh();
-			//if (gameOver(&player)) {
-			//	 break;
-			//}
 		}
-
 		char cmd = toupper(getchar());
 		switch (cmd) {
 			case ' ':
-				case UP:
-					playerJump(&player);
-					break;
+			case UP:
+				playerJump(&player);
+				break;
+			case 'I':
+				player.MAX_SPEED = 100000000;
+				break;
+			case 'P':
+				player.MAX_SPEED = 800000;
+				break;
+			case 'O':
+				player.MAX_SPEED = 100000;
+				break;
 			case 'Q':
 				endwin();
 				exit(0);
@@ -106,10 +116,26 @@ void GameInit (Player *player, Platform *platform) {
 	drawPlayer(player);
 }
 
+int gameOver(Player *player, Platform *platform) {
+	if ((platform->direction != -1 && platform->startX == player->x + 3) ||
+	(platform->direction != 1 && platform->startX == player->x + 1)) {
+		if (player->y + 2 == platform->y){
+			mvprintw(4 ,(HORIZONTAL/2) - 6, " VOCE PERDEU", platform->y, player->y + 2);
+			mvprintw(2 + player->y, player->x + 1, "x");
+			mvprintw(2 + player->y, player->x + 3, "x");
+			return 1;
+		} else {
+			score++;
+			return 0;
+		}
+	}
+	return 0;
+}
+
 void PlatformInit(Platform *platform) {
 	platform->endX = 0;
 	platform->startX = 0;
-	platform->y = VERTICAL - 3;
+	platform->y = VERTICAL - 4;
 	platform->direction = 0;
 	strcpy(platform->symbol, "=");
 }
@@ -118,19 +144,19 @@ void PlayerInit(Player *player) {
 	player->height = 3;
 	player->width = 3;
 	player->x = (int) (HORIZONTAL/2) - 2;
-	player->y = (int) VERTICAL - 3;
+	player->y = (int) VERTICAL - 4;
 	player->MAX_SPEED = 100000;	
 }
 
 void playerJump(Player *player) {
 	if(player->yVelocity == 0)
-		player->yVelocity = -6;
+		player->yVelocity = -3;
 }
 
 void drawPlayer(Player *player) {
 	mvprintw(player->y, player->x, "  o  ");
 	mvprintw(1 + player->y, player->x, "/|_|\\");
-	mvprintw(2 + player->y, player->x, " / \\ ");
+	mvprintw(2 + player->y, player->x, " / \\");
 }
 
 void erasePlayer(Player *player) {
@@ -140,13 +166,14 @@ void erasePlayer(Player *player) {
 }
 
 void movePlayer(Player *player) {
-	if(player->y >= VERTICAL-3 && player->yVelocity >= 0) {
+	if(player->y >= VERTICAL - 3 - score && player->yVelocity >= 0) {
 		player->yVelocity = 0;
 	} else {
 		player->yVelocity += GRAVITY;
 		player->y += player->yVelocity;
 	}
-	if (player->y > VERTICAL-3) player->y = VERTICAL - 3;
+	if (player->y > VERTICAL - 3 - score) player->y = VERTICAL - 3 - score;
+	drawPlayer(player);
 }
 
 void setBorders() {
@@ -155,7 +182,7 @@ void setBorders() {
 			mvprintw(0, j + 20, "X");
 		mvprintw(VERTICAL, j, "X");
 	}
-	mvprintw(0, 1, " Pontuação: %03d ", score);
+	mvprintw(0, 1, "Pontuação: %d", score);
 	for (int j = 0; j <= VERTICAL; j++) {
 		mvprintw(j, 0, "X");
 		mvprintw(j, HORIZONTAL, "X");
@@ -176,7 +203,6 @@ void spawnPlatform(Platform *platform) {
 	}	
 	platform->y = VERTICAL - score - 1;
 }
-
 void movePlatformHead(Platform *platform) {
 	if (platform->endX != platform->startX)
 		platform->startX -= platform->direction;
@@ -184,13 +210,12 @@ void movePlatformHead(Platform *platform) {
 
 void drawHeadPlatform(Platform *platform) {
 	mvprintw(platform->y, platform->startX, platform->symbol);
+	movePlatformHead(platform);
 }
 
 int finishedConstruction(Platform *platform) {
-	if (platform->endX == platform->startX) {
-		score+= 1;
+	if (platform->endX == platform->startX)
 		return 1;
-	}
 	return 0;
 }
 
