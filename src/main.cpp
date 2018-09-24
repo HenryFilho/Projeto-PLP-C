@@ -69,13 +69,13 @@ int main() {
 		// Enquanto teclado não utilizado, fica neste loop
 		while (!kbhit()) {
 			erasePlayer(&player);
-			movePlayer(&player);
 			if (gameOver(&player, &platform) == 1) {
 				refresh();
 				sleep(2);
 				endwin();
 				exit(0);
 			}
+			movePlayer(&player);
 			if (finishedConstruction(&platform))
 				spawnPlatform(&platform);
 			drawHeadPlatform(&platform);
@@ -120,6 +120,7 @@ int gameOver(Player *player, Platform *platform) {
 	if ((platform->direction != -1 && platform->startX == player->x + 3) ||
 	(platform->direction != 1 && platform->startX == player->x + 1)) {
 		if (player->y + 2 == platform->y){
+			drawPlayer(player);
 			mvprintw(4 ,(HORIZONTAL/2) - 6, " VOCE PERDEU", platform->y, player->y + 2);
 			mvprintw(2 + player->y, player->x + 1, "x");
 			mvprintw(2 + player->y, player->x + 3, "x");
