@@ -31,7 +31,7 @@ typedef struct Player {
 typedef struct Platform {
     int endX, startX, y;
     char symbol[2];
-	int direction;
+	  int direction;
 } Platform;
 
 //Game
@@ -45,6 +45,7 @@ void movePlatformHead(Platform *platform);
 int finishedConstruction(Platform *platform);
 // Player
 void PlayerInit(Player *player);
+
 void drawPlayer(Player *player);
 void erasePlayer(Player *player);
 void movePlayer(Player *player);
@@ -212,7 +213,6 @@ void drawHeadPlatform(Platform *platform) {
 	mvprintw(platform->y, platform->startX, platform->symbol);
 	movePlatformHead(platform);
 }
-
 int finishedConstruction(Platform *platform) {
 	if (platform->endX == platform->startX)
 		return 1;
@@ -244,5 +244,6 @@ int kbhit(void) {
     ungetc(ch, stdin);
     return 1;
   }
+  
   return 0;
 }
