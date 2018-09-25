@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <ctype.h>
 #include <time.h>
+#include "recordes.h"
 
 #define VERTICAL 37
 #define HORIZONTAL 80
@@ -72,6 +73,8 @@ int main() {
 			if (gameOver(&player, &platform) == 1) {
 				refresh();
 				sleep(2);
+				system("clear");
+				verificaRecorde(player.pontos);
 				endwin();
 				exit(0);
 			}
@@ -79,7 +82,7 @@ int main() {
 			if (finishedConstruction(&platform))
 				spawnPlatform(&platform);
 			drawHeadPlatform(&platform);
-			setBorders();	
+			setBorders();
 			usleep(player.MAX_SPEED);
 			refresh();
 		}
@@ -146,7 +149,7 @@ void PlayerInit(Player *player) {
 	player->width = 3;
 	player->x = (int) (HORIZONTAL/2) - 2;
 	player->y = (int) VERTICAL - 4;
-	player->MAX_SPEED = 100000;	
+	player->MAX_SPEED = 100000;
 }
 
 void playerJump(Player *player) {
@@ -201,7 +204,7 @@ void spawnPlatform(Platform *platform) {
 		platform->endX = (HORIZONTAL - initSpawn) - (HORIZONTAL/2) - 10;
 		platform->startX = (HORIZONTAL - initSpawn);
 		platform->direction = 1;
-	}	
+	}
 	platform->y = VERTICAL - score - 1;
 }
 void movePlatformHead(Platform *platform) {
@@ -244,6 +247,6 @@ int kbhit(void) {
     ungetc(ch, stdin);
     return 1;
   }
-  
+
   return 0;
 }
