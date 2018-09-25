@@ -1,5 +1,5 @@
 main: main.cpp
-	g++ -std=c++11 main.cpp -o main
+	g++ -std=c++11 main.cpp -o main -lncurses
 
 snake: snake.cpp
 	g++ -std=c++11 snake.cpp -o snake
