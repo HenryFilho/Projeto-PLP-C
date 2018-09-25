@@ -153,7 +153,7 @@ void PlayerInit(Player *player) {
 }
 
 void playerJump(Player *player) {
-	if(player->yVelocity == 0)
+	if(player->y >= VERTICAL - 3 - score)
 		player->yVelocity = -3;
 }
 
