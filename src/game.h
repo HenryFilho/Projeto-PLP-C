@@ -2,41 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <termios.h>
-#include <ncurses.h> // Biblioteca responsável pelo mvprintw
+#include <ncurses.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstdlib>
 #include <ctype.h>
 #include <time.h>
-#include "recordes.h"
 
 #define VERTICAL 37
 #define HORIZONTAL 80
-#define DOWN 115
-#define UP 119
-#define LEFT 97
-#define RIGHT 100
 #define GRAVITY 1
 
-int score = 0;
-
 typedef struct Player {
-	int x, y; // Posição na tela
-	int height, width; // Altura e largura
+	int x, y; // Posição na tela	
 	int MAX_SPEED;
 	int yVelocity;
-	int pontos;
-
 } Player;
 
 typedef struct Platform {
     int endX, startX, y;
     char symbol[2];
-	  int direction;
+	int direction;
 } Platform;
 
 //Game
-void game();
+int game();
+int score = 0;
 void GameInit(Player *player, Platform *platform);
 int gameOver(Player *player, Platform *platform);
 //Platform
@@ -47,7 +38,6 @@ void movePlatformHead(Platform *platform);
 int finishedConstruction(Platform *platform);
 // Player
 void PlayerInit(Player *player);
-
 void drawPlayer(Player *player);
 void erasePlayer(Player *player);
 void movePlayer(Player *player);
@@ -57,49 +47,34 @@ void debug(const char * msg);
 void setBorders();
 int kbhit(void);
 
-
-void game() {
-	initscr();
-	keypad(stdscr, TRUE);
-	noecho();
- 	curs_set(FALSE); //Deixa o cursor invisível
-
+int game() {
 	Player player;
 	Platform platform;
 	GameInit(&player, &platform);
 
-	int endgame = 0;
-	while (endgame == 0) {
-		// Enquanto teclado não utilizado, fica neste loop
+	while (1) {
 		while (!kbhit()) {
 			erasePlayer(&player);
 			if (gameOver(&player, &platform) == 1) {
 				refresh();
-				sleep(2);
-				system("clear");
-
-				keypad(stdscr, FALSE);
 				echo();
- 				curs_set(TRUE);
-				
+ 				curs_set(TRUE);		
 				endwin();
-
-				endgame = 1;
-				break;
-				//exit(0);
+				return 1;
 			}
+
 			movePlayer(&player);
 			if (finishedConstruction(&platform))
 				spawnPlatform(&platform);
-			drawHeadPlatform(&platform);
+			movePlatformHead(&platform);
 			setBorders();
 			usleep(player.MAX_SPEED);
 			refresh();
 		}
+
 		char cmd = toupper(getchar());
 		switch (cmd) {
 			case ' ':
-			case UP:
 				playerJump(&player);
 				break;
 			case 'I':
@@ -109,29 +84,32 @@ void game() {
 				player.MAX_SPEED = 800000;
 				break;
 			case 'O':
-				player.MAX_SPEED = 100000;
+				player.MAX_SPEED = 80000;
 				break;
 			case 'Q':
 				endwin();
 				exit(0);
-			default:
-				printf("\a");
-				break;
 		}
 	}
-
+	return 0;
 }
 
 void GameInit (Player *player, Platform *platform) {
 	PlayerInit(player);
 	PlatformInit(platform);
+
+	initscr();
+	noecho();
+ 	curs_set(FALSE);
+
 	setBorders();
+	mvprintw(0, 2, "Pontuação: %d", score);
 	drawPlayer(player);
 }
 
 int gameOver(Player *player, Platform *platform) {
-	if ((platform->direction != -1 && platform->startX == player->x + 3) ||
-	(platform->direction != 1 && platform->startX == player->x + 1)) {
+	if ((platform->direction > 0 && platform->startX == player->x + 3) ||
+	(platform->direction < 0 && platform->startX == player->x + 1)) {
 		if (player->y + 2 == platform->y){
 			drawPlayer(player);
 			mvprintw(4 ,(HORIZONTAL/2) - 6, " VOCE PERDEU", platform->y, player->y + 2);
@@ -155,8 +133,6 @@ void PlatformInit(Platform *platform) {
 }
 
 void PlayerInit(Player *player) {
-	player->height = 3;
-	player->width = 3;
 	player->x = (int) (HORIZONTAL/2) - 2;
 	player->y = (int) VERTICAL - 4;
 	player->MAX_SPEED = 100000;
@@ -192,11 +168,11 @@ void movePlayer(Player *player) {
 
 void setBorders() {
 	for (int j = 0; j < HORIZONTAL + 1; j++) {
-		if(j + 18 <= HORIZONTAL)
-			mvprintw(0, j + 20, "X");
+		if(j > 11 && j + 10 <= HORIZONTAL)
+			mvprintw(0, j + 10, "X");
 		mvprintw(VERTICAL, j, "X");
 	}
-	mvprintw(0, 1, "Pontuação: %d", score);
+	mvprintw(0, 2, "Pontuação: %d", score);
 	for (int j = 0; j <= VERTICAL; j++) {
 		mvprintw(j, 0, "X");
 		mvprintw(j, HORIZONTAL, "X");
@@ -218,23 +194,16 @@ void spawnPlatform(Platform *platform) {
 	platform->y = VERTICAL - score - 1;
 }
 void movePlatformHead(Platform *platform) {
+	mvprintw(platform->y, platform->startX, platform->symbol);
 	if (platform->endX != platform->startX)
 		platform->startX -= platform->direction;
 }
 
-void drawHeadPlatform(Platform *platform) {
-	mvprintw(platform->y, platform->startX, platform->symbol);
-	movePlatformHead(platform);
-}
 int finishedConstruction(Platform *platform) {
 	if (platform->endX == platform->startX)
 		return 1;
 	return 0;
 }
-
-// void debug(const char *msg) {
-// 	fprintf(stderr, msg);
-// }
 
 int kbhit(void) {
   struct termios oldt, newt;
