@@ -34,8 +34,6 @@ typedef struct Platform {
 	int direction;
 } Platform;
 
-int kbhit(void);
-
 //Game
 void GameInit(Player *player, Platform *platform);
 int gameOver(Player *player, Platform *platform);
@@ -54,6 +52,7 @@ void playerJump(Player *);
 // Util
 void debug(const char * msg);
 void setBorders();
+int kbhit(void);
 
 int main() {
 	initscr();
