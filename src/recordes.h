@@ -6,8 +6,6 @@
 #define NUM_RECORDES 10
 #define SCR_WIDTH 150
 #define SCR_HEIGHT 39
-#define WIDTH 30
-#define HEIGHT 12
 
 int startx = 0;
 int starty = 0;
@@ -52,9 +50,7 @@ void carregarRecordes() {
   }
   rewind(arquivoRecordes);
   int i = 0;
-  //printf("Bytes lidos: %lu\n", fread(&recordes[i], sizeof(Recorde), 1, arquivoRecordes));
   while(i < NUM_RECORDES && fread(&recordes[i], sizeof(Recorde), 1, arquivoRecordes) == 1) {
-    //fprintf(stderr, "Entrei aqui\n");
     i++;
   }
   for (int j = i; j < NUM_RECORDES; j++) {
@@ -96,6 +92,8 @@ void salvarNovoRecorde() {
 }
 
 void imprimeRecordes() {
+    const int WIDTH = 30;
+    const int HEIGHT = 12;
     WINDOW *menu_win;
     int c;
     
