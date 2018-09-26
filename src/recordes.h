@@ -1,8 +1,16 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <ncurses.h>
 
 #define NUM_RECORDES 10
+#define SCR_WIDTH 150
+#define SCR_HEIGHT 39
+#define WIDTH 30
+#define HEIGHT 12
+
+int startx = 0;
+int starty = 0;
 
 char nome[21];
 
@@ -88,10 +96,43 @@ void salvarNovoRecorde() {
 }
 
 void imprimeRecordes() {
-  printf("=========================\n");
-  printf("======= RECORDES ========\n");
-  printf("=========================\n\n");
-  for (int i = 0; i < NUM_RECORDES; i++) {
-    printf("%-20s %04d\n", recordes[i].nome, recordes[i].pontos);
-  }
+    WINDOW *menu_win;
+    int c;
+    
+    initscr();
+    clear();
+    noecho();
+    curs_set(FALSE);
+    cbreak();
+    startx = (SCR_WIDTH - WIDTH) / 2;
+    starty = (SCR_HEIGHT - HEIGHT) / 2;
+    
+    carregarRecordes();
+    menu_win = newwin(HEIGHT, WIDTH, starty, startx);
+    keypad(menu_win, TRUE);
+
+    int xName = (SCR_WIDTH - 25) / 2;
+    mvprintw(starty - 3, xName, "=========================");
+    mvprintw(starty - 2, xName, "======= RECORDES ========");
+    mvprintw(starty - 1, xName, "=========================");
+
+    refresh();
+    int x, y, i;
+
+    x = 3;
+    y = 1;
+    box(menu_win, 0, 0);
+    for(i = 0; i < NUM_RECORDES; i++){
+	    mvwprintw(menu_win, y, x, "%-20s %04d", recordes[i].nome, recordes[i].pontos);
+	    y++;
+    }
+    while(1){
+	    c = wgetch(menu_win);
+	    if(c == 10)
+		    break;
+    }
+    clrtoeol();
+    refresh();
+    endwin();
+    clear();
 }

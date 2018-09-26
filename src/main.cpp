@@ -15,7 +15,6 @@ int main(){
 				gameOver = game();
 				if (score > 0)
 					verificaRecorde(score); //SÓ ENTRA SE SCORE >= 1
-				imprimeRecordes();
 				break;
 			case 2:
 				//OPCAO Recordes

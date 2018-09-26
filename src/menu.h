@@ -7,8 +7,8 @@
 #define WIDTH 30
 #define HEIGHT 10
 
-int startx = 0;
-int starty = 0;
+//int startx = 0;
+//int starty = 0;
 
 char choices[][20] = {
 			"Iniciar",

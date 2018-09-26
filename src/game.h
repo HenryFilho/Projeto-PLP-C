@@ -48,6 +48,7 @@ void setBorders();
 int kbhit(void);
 
 int game() {
+	score = 0;
 	Player player;
 	Platform platform;
 	GameInit(&player, &platform);
