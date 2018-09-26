@@ -145,9 +145,16 @@ void playerJump(Player *player) {
 }
 
 void drawPlayer(Player *player) {
-	mvprintw(player->y, player->x, "  o  ");
-	mvprintw(1 + player->y, player->x, "/|_|\\");
-	mvprintw(2 + player->y, player->x, " / \\");
+	if(player->y >= VERTICAL - 3 - score && player->yVelocity >= 0){
+		mvprintw(player->y, player->x, "(^~^)");
+		mvprintw(1 + player->y, player->x, "/|_|\\");
+		mvprintw(2 + player->y, player->x, " / \\");
+	}
+	else{
+		mvprintw(player->y, player->x, "(^o^)");
+		mvprintw(1 + player->y, player->x, "t|_|t ");
+		mvprintw(2 + player->y, player->x, " / \\");
+	}
 }
 
 void erasePlayer(Player *player) {

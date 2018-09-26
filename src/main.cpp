@@ -2,6 +2,7 @@
 #include "game.h"
 #include "recordes.h"
 #include "menu.h"
+#include "creditos.h"
 
 int main(){
 
@@ -22,6 +23,7 @@ int main(){
 				break;
 			case 3:
 				//OPCAO Creditos
+				imprimeCreditos();
 				break;
 			case 4:
 				//OPCAO Sair
