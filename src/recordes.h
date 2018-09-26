@@ -110,9 +110,9 @@ void imprimeRecordes() {
     keypad(menu_win, TRUE);
 
     int xName = (SCR_WIDTH - 25) / 2;
-    mvprintw(starty - 3, xName, "=========================");
-    mvprintw(starty - 2, xName, "======= RECORDES ========");
-    mvprintw(starty - 1, xName, "=========================");
+    mvprintw(starty - 3, xName, "==========================");
+    mvprintw(starty - 2, xName, "======== RECORDES ========");
+    mvprintw(starty - 1, xName, "==========================");
 
     refresh();
     int x, y, i;
