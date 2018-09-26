@@ -1,18 +1,34 @@
 #include <stdio.h>
 #include "game.h"
 #include "recordes.h"
+#include "menu.h"
 
 int main(){
 
-	int algumacoisa;
 	int gameOver = 0;
 	while(1){
-		scanf("%d", &algumacoisa);
-		if(algumacoisa == 55 && !gameOver){
-			gameOver = game();
-			if (score > 0)
-				verificaRecorde(score); //SÓ ENTRA SE SCORE >= 1
-			imprimeRecordes();		
+		int o = showMenu();
+
+		switch(o)
+		{	case 1:
+				//OPCAO Iniciar
+				gameOver = game();
+				if (score > 0)
+					verificaRecorde(score); //SÓ ENTRA SE SCORE >= 1
+				imprimeRecordes();
+				break;
+			case 2:
+				//OPCAO Recordes
+				imprimeRecordes();
+				break;
+			case 3:
+				//OPCAO Creditos
+				break;
+			case 4:
+				//OPCAO Sair
+				exit(0);
+			default:
+				break;
 		}
 	}
 
