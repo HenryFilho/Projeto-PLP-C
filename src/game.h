@@ -141,10 +141,13 @@ void PlayerInit(Player *player) {
 
 void playerJump(Player *player) {
 	if(player->y >= VERTICAL - 3 - score)
-		player->yVelocity = -3;
+		player->yVelocity = -4;
 }
 
 void drawPlayer(Player *player) {
+	if(player->MAX_SPEED > 40000){
+		player->MAX_SPEED = 100000 - (score/2 * 5000);
+	}
 	if(player->y >= VERTICAL - 3 - score && player->yVelocity >= 0){
 		mvprintw(player->y, player->x, "(^~^)");
 		mvprintw(1 + player->y, player->x, "/|_|\\");
