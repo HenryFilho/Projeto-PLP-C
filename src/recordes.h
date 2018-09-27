@@ -61,7 +61,8 @@ void carregarRecordes() {
 }
 
 void lerNome() {
-  printf("Digite seu nome: ");
+  system("clear");
+  printf("\n\n   Digite seu nome: ");
   scanf("%[^\n]20s", nome);
 }
 
@@ -96,7 +97,7 @@ void imprimeRecordes() {
     const int HEIGHT = 12;
     WINDOW *menu_win;
     int c;
-    
+
     initscr();
     clear();
     noecho();
@@ -104,7 +105,7 @@ void imprimeRecordes() {
     cbreak();
     startx = (SCR_WIDTH - WIDTH) / 2;
     starty = (SCR_HEIGHT - HEIGHT) / 2;
-    
+
     carregarRecordes();
     menu_win = newwin(HEIGHT, WIDTH, starty, startx);
     keypad(menu_win, TRUE);
