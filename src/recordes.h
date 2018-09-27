@@ -113,6 +113,7 @@ void imprimeRecordes() {
     mvprintw(starty - 3, xName, "==========================");
     mvprintw(starty - 2, xName, "======== RECORDES ========");
     mvprintw(starty - 1, xName, "==========================");
+    mvprintw(starty + HEIGHT, xName, "Voltar para o menu: ENTER");
 
     refresh();
     int x, y, i;

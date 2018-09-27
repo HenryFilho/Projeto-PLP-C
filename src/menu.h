@@ -38,10 +38,10 @@ int showMenu()
 	menu_win = newwin(HEIGHT, WIDTH, starty, startx);
 	keypad(menu_win, TRUE);
 
-	int xName = (SCR_WIDTH - 10) / 2;
-	mvprintw(starty - 3, xName, "==========");
-	mvprintw(starty - 2, xName, "JumpMaster");
-	mvprintw(starty - 1, xName, "==========");
+    int xName = (SCR_WIDTH - 26) / 2;
+    mvprintw(starty - 3, xName, "==========================");
+    mvprintw(starty - 2, xName, "======= JumpMaster =======");
+    mvprintw(starty - 1, xName, "==========================");
 
 	refresh();
 	print_menu(menu_win, highlight);

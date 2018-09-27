@@ -78,15 +78,6 @@ int game() {
 			case ' ':
 				playerJump(&player);
 				break;
-			case 'I':
-				player.MAX_SPEED = 100000000;
-				break;
-			case 'P':
-				player.MAX_SPEED = 800000;
-				break;
-			case 'O':
-				player.MAX_SPEED = 80000;
-				break;
 			case 'Q':
 				endwin();
 				exit(0);
@@ -104,7 +95,6 @@ void GameInit (Player *player, Platform *platform) {
  	curs_set(FALSE);
 
 	setBorders();
-	mvprintw(0, 2, "Pontuação: %d", score);
 	drawPlayer(player);
 }
 
@@ -179,11 +169,11 @@ void movePlayer(Player *player) {
 
 void setBorders() {
 	for (int j = 0; j < HORIZONTAL + 1; j++) {
-		if(j > 11 && j + 10 <= HORIZONTAL)
-			mvprintw(0, j + 10, "X");
+		if(j > 17  && j <= HORIZONTAL)
+			mvprintw(0, j, "X");
 		mvprintw(VERTICAL, j, "X");
 	}
-	mvprintw(0, 2, "Pontuação: %d", score);
+	mvprintw(0, 2, "Pontuacao: %04d", score);
 	for (int j = 0; j <= VERTICAL; j++) {
 		mvprintw(j, 0, "X");
 		mvprintw(j, HORIZONTAL, "X");
@@ -195,11 +185,11 @@ void spawnPlatform(Platform *platform) {
 	int initSpawn = rand() % 18;
 	if (rand() % 2 == 0) {
 		platform->endX = initSpawn + (HORIZONTAL/2) + 10;
-		platform->startX = initSpawn;
+		platform->startX = initSpawn + 1;
 		platform->direction = -1;
 	} else {
 		platform->endX = (HORIZONTAL - initSpawn) - (HORIZONTAL/2) - 10;
-		platform->startX = (HORIZONTAL - initSpawn);
+		platform->startX = (HORIZONTAL - initSpawn) - 1;
 		platform->direction = 1;
 	}
 	platform->y = VERTICAL - score - 1;

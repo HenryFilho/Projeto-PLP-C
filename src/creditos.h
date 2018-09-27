@@ -15,9 +15,10 @@ void imprimeCreditos() {
     keypad(menu_win, TRUE);
 
     int xName = (SCR_WIDTH - 25) / 2;
-    mvprintw(starty - 3, xName, "*************************");
-    mvprintw(starty - 2, xName, "******* Creditos ********");
-    mvprintw(starty - 1, xName, "*************************");
+    mvprintw(starty - 3, xName, "**************************");
+    mvprintw(starty - 2, xName, "******** Creditos ********");
+    mvprintw(starty - 1, xName, "**************************");
+    mvprintw(starty + HEIGHT, xName + 1, "Voltar para o menu: ENTER");
 
     refresh();
     int x, y, i;

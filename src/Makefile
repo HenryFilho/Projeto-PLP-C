@@ -1,4 +1,4 @@
-main: main.cpp
+main: main.cpp game.h menu.h recordes.h creditos.h
 	g++ -std=c++11 main.cpp -o main -lncurses
 
 recordes: testeRecordes.cpp
